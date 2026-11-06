@@ -1,7 +1,8 @@
 "use client";
 import { Input, Select } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { ALL_ASPECT_RATIOS, type AppSettings } from "@/server/settings/schema";
+import { ALL_ASPECT_RATIOS } from "@/lib/constants";
+import type { AppSettings } from "@/server/settings/schema";
 import { ListInput, NumberInput, PageHeader, Row, SaveBar, Section, useSection } from "./form";
 
 export function GenerationPanel({ generation, quotas }: { generation: AppSettings["generation"]; quotas: AppSettings["quotas"] }) {

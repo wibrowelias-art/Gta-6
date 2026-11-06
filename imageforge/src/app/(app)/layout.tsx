@@ -1,5 +1,5 @@
 import { Logo } from "@/components/brand";
-import { AppNav } from "@/components/app/app-nav";
+import { AppNav, MobileTabBar } from "@/components/app/app-nav";
 import { getBranding } from "@/server/branding";
 import { requireUser } from "@/server/auth/session";
 import { getSettings } from "@/server/settings/store";
@@ -10,7 +10,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const [u, b, s] = await Promise.all([requireUser(), getBranding(), getSettings()]);
   const maintenance = s.access.maintenance.enabled && u.role !== "developer";
   return (
-    <div className="min-h-dvh pb-20 md:pb-0">
+    <div className="relative min-h-dvh pb-20 md:pb-0">
+      <div aria-hidden className="glow pointer-events-none absolute inset-x-0 top-0 -z-10 h-[520px]" />
       <header className="sticky top-0 z-30 border-b border-border/60 bg-bg/80 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4">
           <Logo name={b.appName} logoUrl={b.logoUrl} href="/create" />
@@ -24,6 +25,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         </div>
       )}
       <main className="mx-auto max-w-6xl px-4 py-6">{maintenance ? <MaintenanceNotice message={s.access.maintenance.message} /> : children}</main>
+      <MobileTabBar />
     </div>
   );
 }

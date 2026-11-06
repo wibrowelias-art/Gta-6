@@ -15,7 +15,8 @@ export type ProviderId = z.infer<typeof providerIdSchema>;
 export const POLICY_CATEGORIES = ["violence", "weapons", "hate", "scams", "doxxing", "drugs"] as const;
 export type PolicyCategory = (typeof POLICY_CATEGORIES)[number];
 
-export const ALL_ASPECT_RATIOS = ["1:1", "4:3", "3:4", "3:2", "2:3", "16:9", "9:16"] as const;
+import { ALL_ASPECT_RATIOS } from "@/lib/constants";
+export { ALL_ASPECT_RATIOS };
 export const aspectRatioSchema = z.enum(ALL_ASPECT_RATIOS);
 export type AspectRatio = z.infer<typeof aspectRatioSchema>;
 

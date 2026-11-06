@@ -1,0 +1,65 @@
+name: imageforge
+
+on:
+  push:
+    paths: ["imageforge/**", ".github/workflows/imageforge.yml"]
+  pull_request:
+    paths: ["imageforge/**", ".github/workflows/imageforge.yml"]
+
+defaults:
+  run:
+    working-directory: imageforge
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: imageforge_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/imageforge_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: imageforge/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - name: Unit + integration tests
+        run: npm test
+
+      - name: Build with canary secrets
+        env:
+          # Fake but realistic-looking values. If any reaches the client bundle, the scan fails.
+          OPENAI_API_KEY: sk-proj-CANARYcanaryCANARYcanary0000000000
+          GEMINI_API_KEY: AIzaCANARYcanaryCANARYcanaryCANARY00000
+          BLOB_READ_WRITE_TOKEN: vercel_blob_rw_CANARYcanary_CANARYcanary000
+          RESEND_API_KEY: re_CANARYcanaryCANARYcanary000
+          BETTER_AUTH_SECRET: canary-auth-secret-0123456789abcdef
+          DEV_PIN: "918273"
+          DEV_BOOTSTRAP_PASSWORD: canary-bootstrap-password
+          STRIPE_SECRET_KEY: sk_test_CANARYcanaryCANARY
+          DATABASE_URL: postgres://canary:canarypass@localhost:5432/canary
+        run: |
+          npm run build
+          npm run scan:secrets
+
+      - name: Playwright e2e (stub provider)
+        run: |
+          npx playwright install --with-deps chromium
+          npx playwright test
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: imageforge/test-results

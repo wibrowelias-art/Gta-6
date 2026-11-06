@@ -35,15 +35,20 @@ export function AppNav() {
       >
         <LogOut className="h-4 w-4" /> Sign out
       </button>
-      {/* mobile tab bar */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-border bg-bg/90 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
-        {items.map(({ href, label, icon: Icon }) => (
-          <Link key={href} href={href} className={cn("flex flex-col items-center gap-0.5 py-2.5 text-[11px]", path.startsWith(href) ? "text-fg" : "text-muted")}>
-            <Icon className="h-5 w-5" />
-            {label}
-          </Link>
-        ))}
-      </nav>
     </>
+  );
+}
+
+export function MobileTabBar() {
+  const path = usePathname();
+  return (
+    <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-border bg-bg/90 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden" aria-label="Primary">
+      {items.map(({ href, label, icon: Icon }) => (
+        <Link key={href} href={href} className={cn("flex flex-col items-center gap-0.5 py-2.5 text-[11px]", path.startsWith(href) ? "text-fg" : "text-muted")}>
+          <Icon className="h-5 w-5" />
+          {label}
+        </Link>
+      ))}
+    </nav>
   );
 }

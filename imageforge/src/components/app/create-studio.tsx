@@ -116,7 +116,7 @@ export function CreateStudio({ config, recent, remix }: { config: ClientConfig; 
 
   return (
     <div className="mx-auto max-w-5xl">
-      <section className="glow -mx-4 px-4 pb-6 pt-4 sm:pt-10">
+      <section className="pb-6 pt-4 sm:pt-10">
         <div className="mx-auto max-w-3xl">
           <div className="mb-3 flex items-center justify-between">
             <h1 className="text-lg font-semibold tracking-tight">What do you want to see?</h1>
@@ -177,9 +177,10 @@ export function CreateStudio({ config, recent, remix }: { config: ClientConfig; 
                   Avoid…
                 </button>
               )}
-              <span className="ml-auto hidden text-[11px] text-muted sm:inline">
-                <kbd className="rounded border border-border px-1">Enter</kbd> generate · <kbd className="rounded border border-border px-1">Shift</kbd>+<kbd className="rounded border border-border px-1">Enter</kbd> new line
-              </span>
+              <div className="ml-auto flex items-center gap-3">
+              <span className="hidden text-[11px] text-muted sm:inline" title="Enter generates · Shift+Enter adds a new line">
+                  ↵ generate · ⇧↵ new line
+                </span>
               <button
                 type="submit"
                 disabled={!prompt.trim() || busy || config.models.length === 0}
@@ -189,6 +190,7 @@ export function CreateStudio({ config, recent, remix }: { config: ClientConfig; 
                 {busy ? <Sparkles className="h-4 w-4 animate-pulse" /> : <ArrowUp className="h-4 w-4" />}
                 {busy ? "Generating" : "Generate"}
               </button>
+              </div>
             </div>
           </form>
 
