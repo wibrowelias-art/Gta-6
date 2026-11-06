@@ -154,3 +154,23 @@ export function StepUpStatus() {
     </button>
   );
 }
+
+/** Makes sure a step-up is active (prompting if needed), then downloads a protected file. */
+export async function downloadDev(url: string, filename: string) {
+  const s = await api<{ expiresAt: number | null }>("/api/dev/step-up").catch(() => ({ expiresAt: null }));
+  if (!s.expiresAt || s.expiresAt < Date.now()) {
+    const okay = opener ? await opener() : false;
+    if (!okay) return;
+  }
+  const res = await fetch(url);
+  if (!res.ok) {
+    toast.error("Download failed");
+    return;
+  }
+  const blob = await res.blob();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}

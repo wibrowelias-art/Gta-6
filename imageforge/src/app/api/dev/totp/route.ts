@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import QRCode from "qrcode";
 import { z } from "zod";
 import { writeAudit } from "@/server/audit";
 import { requireDevApi } from "@/server/auth/guards";
@@ -12,7 +13,8 @@ export const POST = handler(async (req: Request) => {
   const { user, meta, actor } = await requireDevApi(req, { stepUp: true });
   const { secret, uri } = await beginTotpEnrollment(user.id, user.email);
   await writeAudit({ actor, action: "dev.totp.enroll_started", targetType: "user", targetId: user.id, meta });
-  return ok({ secret, uri });
+  const qrSvg = await QRCode.toString(uri, { type: "svg", margin: 1, width: 192 });
+  return ok({ secret, uri, qrSvg });
 });
 
 const confirm = z.object({ code: z.string().min(6).max(10) });
