@@ -7,7 +7,9 @@ import { ensureBootstrap } from "@/server/bootstrap";
 export const metadata = { title: "Sign in" };
 
 export default async function SignInPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
-  await ensureBootstrap().catch((e) => console.error("[bootstrap]", e));
+  if (process.env.NEXT_PHASE !== "phase-production-build") {
+    await ensureBootstrap().catch((e) => console.error("[bootstrap]", e instanceof Error ? e.message : e));
+  }
   const u = await getCurrentUser();
   const { next } = await searchParams;
   const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "/create";
