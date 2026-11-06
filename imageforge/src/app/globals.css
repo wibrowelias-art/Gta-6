@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --accent: #8b5cf6;
+  --bg: #fafafa;
+  --fg: #0a0a0b;
+  --muted: #6b6b76;
+  --card: #ffffff;
+  --border: #e6e6ea;
+  --ring: color-mix(in oklab, var(--accent) 60%, transparent);
+}
+.dark {
+  --bg: #08080a;
+  --fg: #ededf0;
+  --muted: #8a8a96;
+  --card: #111114;
+  --border: #23232a;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-ring: var(--ring);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: color-mix(in oklab, var(--accent) 35%, transparent); }
+
+.glow {
+  background:
+    radial-gradient(60% 50% at 50% 0%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%),
+    radial-gradient(40% 30% at 80% 20%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 70%);
+}
+.shimmer {
+  background: linear-gradient(110deg, color-mix(in oklab, var(--fg) 5%, transparent) 30%, color-mix(in oklab, var(--fg) 11%, transparent) 50%, color-mix(in oklab, var(--fg) 5%, transparent) 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .shimmer { animation: none; } }
