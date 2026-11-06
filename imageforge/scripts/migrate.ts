@@ -8,7 +8,9 @@ if (!url) {
   console.error("DATABASE_URL is not set");
   process.exit(1);
 }
-const sql = postgres(url, { max: 1, prepare: false });
+const u = new URL(url);
+u.searchParams.delete("channel_binding"); // unsupported by postgres.js; sslmode still enforces TLS
+const sql = postgres(u.toString(), { max: 1, prepare: false });
 await migrate(drizzle(sql), { migrationsFolder: "./drizzle" });
 await sql.end();
 console.log("migrations applied");

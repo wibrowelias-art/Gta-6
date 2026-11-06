@@ -8,8 +8,19 @@ type DB = PostgresJsDatabase<typeof schema>;
 
 const g = globalThis as unknown as { __ifDb?: DB; __ifSql?: postgres.Sql };
 
+/** postgres.js doesn't support SCRAM channel binding; Neon URLs include `channel_binding=require`. TLS stays required via sslmode. */
+export function normalizeDbUrl(raw: string): string {
+  try {
+    const u = new URL(raw);
+    u.searchParams.delete("channel_binding");
+    return u.toString();
+  } catch {
+    return raw;
+  }
+}
+
 function create(): DB {
-  const sql = postgres(env.DATABASE_URL, {
+  const sql = postgres(normalizeDbUrl(env.DATABASE_URL), {
     max: process.env.VERCEL ? 1 : 10,
     prepare: false, // safe with Neon / PgBouncer pooled URLs
     idle_timeout: 20,

@@ -17,6 +17,7 @@
     "e2e": "playwright test",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.ts",
+    "db:migrate:https": "NODE_USE_ENV_PROXY=1 tsx scripts/migrate-neon-http.ts",
     "db:seed": "tsx --conditions=react-server scripts/seed.ts",
     "scan:secrets": "node scripts/check-bundle-secrets.mjs",
     "check": "npm run typecheck && npm run lint && npm run test"
@@ -46,6 +47,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",
+    "@neondatabase/serverless": "^1.2.0",
     "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4.3.4",
     "@types/node": "^26.6.6",
