@@ -14,5 +14,5 @@ export async function resetDb() {
 export async function makeUser(role: "user" | "developer" = "user", planId = "free") {
   const id = randomUUID();
   await db.insert(user).values({ id, email: `${id}@test.local`, name: "Test", role, planId });
-  return { id, email: `${id}@test.local`, role };
+  return { id, email: `${id}@test.local`, name: "Test", role, planId, banned: false, theme: "dark", devTotpEnabled: false };
 }
